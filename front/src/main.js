@@ -54,6 +54,7 @@ router.beforeEach((to, from, next) => {
 
 const store = new Vuex.Store({
     state: {
+        user_status: 0
     },
     mutations: {
     }

@@ -10,7 +10,11 @@ This project is designed for users to create groups, members of the group can vi
 
 ### 截图
 
-![screenshot](Screenshot.png)
+
+
+![screenshot1](images/Screenshot1.png)
+
+![screenshot](images/Screenshot.png)
 
 
 
