@@ -5,6 +5,7 @@ import App from './App.vue'
 
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
+import VueCookie from 'vue-cookie'
 
 Vue.config.productionTip = false
 
@@ -16,6 +17,7 @@ import Register from './components/Register.vue'
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.use(VueCookie);
 
 const router = new VueRouter({
     routes: [{
@@ -63,7 +65,8 @@ router.beforeEach((to, from, next) => {
 
 const store = new Vuex.Store({
     state: {
-        user_status: 1
+        user_status: 1,
+        login_status: 1
     },
     mutations: {
     }

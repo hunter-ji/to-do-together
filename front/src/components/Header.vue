@@ -1,34 +1,53 @@
 <template>
-    <el-row>
-        <el-col :span="12">
-            <span class="logo">
+    <div>
+        <ul>
+            <li>
                 <img src="../assets/logo.png" alt="logo" class="logoimg">
-            </span>
-        </el-col>
-        <el-col :span="12">
-            <div class="menu">
-                <el-link href="#" class="alink"><i class="el-icon-user"></i> 假装已经登陆的你 </el-link>
-            </div>
-        </el-col>
-    </el-row>
+            </li>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#news">历史任务</a></li>
+            <li><a href="#about">关于</a></li>
+            <li class="menu">
+                <a href="#" class="alink"><i class="el-icon-user"></i> 假装已经登陆的你 </a>
+            </li>
+        </ul>
+    </div>
 </template>
 
 
 <style>
 .menu {
     float: right;
-    margin-top: 30px;
-    margin-right: 20px;
 }
 .logo {
     float:left;
-    margin-top: 10px;
+    margin-top: 2px;
 }
 .logoimg {
-    height: 45%;
-    width: 45%;
-    min-width: 57px;
-    min-height: 57px;
+    height: 40%;
+    width: 40%;
+    min-width: 40px;
+    min-height: 40px;
     margin-left: 10px;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+li {
+    float: left;
+}
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+li a:hover {
+    border-radius: 4px;
+    background-color: #409EFF;
 }
 </style>
