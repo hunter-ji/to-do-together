@@ -69,6 +69,11 @@
 </template>
 
 <script>
+// api
+import { getTask, deleteTask, changeTask } from '../api/todo.js'
+import { getTaskList, addTask } from '../api/todolist.js'
+
+// components
 import Header from './Header.vue'
 
 /* eslint-disable */
@@ -108,6 +113,7 @@ export default {
             }
         },
         addtask() {
+            // 添加任务
             if ( this.check() ) {
                 var task = {
                     'name': this.newtask,
@@ -115,11 +121,17 @@ export default {
                     'time': this.newtasktime[0] + ' - ' + this.newtasktime[1],
                     'share': 0
                 }
+                // 扔后端
+                addTask(task).then(response=> {
+                    console.log(response)
+                })
+
                 this.right_lists.push(task)
                 this.newtask = ''
             }
         },
         deletetask(taskid) {
+            // 删除任务
             var index = this.right_lists.findIndex(item => {
                 if (item.id == taskid) {
                     return true;
