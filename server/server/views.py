@@ -11,7 +11,7 @@ import time
 import datetime
 
 parser = reqparse.RequestParser(trim=True)
-parser.add_argument('name', location=['json', 'args'])
+parser.add_argument('name', location='json')
 parser.add_argument('share', type=dict)
 parser.add_argument('check', location=['json', 'args'])
 
@@ -72,9 +72,11 @@ class ToDoList(Resource):
 
     # 增加任务
     def post(self):
-        print(parser)
-        args = parser.parse_args()
-        print(args)
+       # print(parser)
+       # args = parser.parse_args()
+        json_data = request.get_json(force=True)
+        print(json_data)
+       # print(args)
         return {
                 'code': 20000,
                 'data': 'hello'

@@ -122,9 +122,6 @@ export default {
                     'share': 0
                 }
                 // 扔后端
-                addTask(task).then(response=> {
-                    console.log(response)
-                })
 
                 this.right_lists.push(task)
                 this.newtask = ''
