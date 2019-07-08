@@ -4,8 +4,8 @@
             <el-header>
                 <myheader></myheader>
             </el-header>
-            <el-main>
-                <!-- 一个人的卡片 -->
+
+            <!-- 一个人的卡片 -->
                 <el-card class="box-card right-card list-card">
                     <span style="margin-bottom: 45px;">
                         <h2>
@@ -13,48 +13,33 @@
                             今天是{{ today | dateFormat() }}。
                         </h2>
                     </span>
-                    <div v-for="item in right_lists" :key="item.name" class="listitem">
-                        <el-row type="flex">
-                            <el-col :span="12">
-                                <div class="list">
-                                    <el-checkbox v-model="item.checked">
-                                        <span :class="{ delit: item.checked }" @click.prevent="open(item.id, item.name)" >{{ item.name }}</span>
-                                    </el-checkbox>
-                                </div>
-                            </el-col>
-                            <el-col :span="11">
-                                <span class="toright">{{ item.time }}</span>
-                            </el-col>
-                            <el-col :span="1">
-                                <el-link :underline="false" class="toright close" @click="deletetask(item.id)">
-                                    <i class="el-icon-close"></i>
-                                </el-link>
-                            </el-col>
-                        </el-row>
-                        <el-divider></el-divider>
-                    </div>
+                    <el-checkbox-group v-model="right_lists">
+                        <div v-for="item in right_lists" class="listitem">
+                            <el-row type="flex">
+                                <el-col :span="23">
+                                    <div class="list">
+                                        <el-checkbox v-model="item.checked" @click="checkedtask(item.id)">
+                                            <span :class="{ delit: item.checked }" @click.prevent="open(item.id, item.task)" >{{ item.task }}</span>
+                                        </el-checkbox>
+                                    </div>
+                                </el-col>
+                                <el-col :span="1">
+                                    <el-link :underline="false" class="toright close" @click="deletetask(item.id)">
+                                        <i class="el-icon-close"></i>
+                                    </el-link>
+                                </el-col>
+                            </el-row>
+                            <el-divider></el-divider>
+                        </div>
+                    </el-checkbox-group>
                     <!-- 用户添加任务 -->
                     <div class="listitem">
                         <el-row type="flex">
-                            <el-col :span="12">
-                                <el-input v-model="newtask" placeholder="添加任务" prefix-icon="el-icon-plus" style="width: 95%;"></el-input>
+                            <el-col :span="23">
+                                <el-input v-model="newtask" placeholder="添加任务" prefix-icon="el-icon-plus" style="width: 98%;"></el-input>
                             </el-col>
-                            <el-col :span="10">
-                                <el-time-picker
-                                    class="toright"
-                                    style="width: 75%;"
-                                    format="HH:mm"
-                                    value-format="HH:mm"
-                                    is-range
-                                    v-model="newtasktime"
-                                    range-separator="-"
-                                    start-placeholder="开始"
-                                    end-placeholder="结束"
-                                    placeholder="选择时间范围">
-                                </el-time-picker>
-                            </el-col>
-                            <el-col :span="2">
-                                <el-button type="primary" icon="el-icon-plus" circle @click="addtask" size="mini" class="toright"></el-button>
+                            <el-col :span="1">
+                                <el-button type="primary" icon="el-icon-plus" circle @click="addtask" class="toright"></el-button>
                             </el-col>
                         </el-row>
                         <el-divider></el-divider>
@@ -84,23 +69,26 @@ export default {
     data() {
         return {
             right_lists: [
-                { 'id': 0, 'name': '早起', 'checked': true, 'time': '6:00 - 6:30', 'share': 0 },
-                { 'id': 1, 'name': '吃早餐', 'checked': true, 'time': '6:30 - 7:00', 'share': 0 },
-                { 'id': 2, 'name': '复习期末考试', 'checked': false, 'time': '7:00 - 11:00', 'share': 0 },
-                { 'id': 3, 'name': '去食堂吃饭', 'checked': false, 'time': '11:00 - 11:30', 'share': 0 },
-                { 'id': 4, 'name': '去超市买零食', 'checked': false, 'time': '11:30 - 13:00', 'share': 0 },
-                { 'id': 5, 'name': '其他', 'checked': false, 'time': '13:00 - xx:xx', 'share': 0 }
+                { 'id': 0, 'task': '网络异常...', 'checked': true, 'share': 0 },
             ],
             newtask: '',
-            newtasktime: '',
-            today: new Date()
+            today: new Date(),
+            checkList: ['选中且禁用','复选框 A']
         }
     },
     methods: {
+        fetchData() {
+            // 初始化数据
+            getTaskList().then(response => {
+                console.log(response.data)
+                this.right_lists = response.data
+            })
+        },
         stopclick(value) {
             console.log(value)
         },
         check() {
+            // 检测输入框为空
             if ( this.newtask == '' ) {
                 this.$message({
                     showClose: true,
@@ -116,12 +104,15 @@ export default {
             // 添加任务
             if ( this.check() ) {
                 var task = {
-                    'name': this.newtask,
+                    'task': this.newtask,
                     'checked': false,
-                    'time': this.newtasktime[0] + ' - ' + this.newtasktime[1],
                     'share': 0
                 }
                 // 扔后端
+                addTask(task).then( response => {
+                    console.log(response)
+                } )
+
 
                 this.right_lists.push(task)
                 this.newtask = ''
@@ -129,12 +120,18 @@ export default {
         },
         deletetask(taskid) {
             // 删除任务
+            // 后端删除
+            deleteTask(taskid)
+            // 前端删除
             var index = this.right_lists.findIndex(item => {
                 if (item.id == taskid) {
                     return true;
                 }
             })
             this.right_lists.splice(index, 1)
+        },
+        checkedtask(taskid) {
+            console.log(taskid)
         },
         open(taskid, taskname) {
             this.$confirm('添加额外内容，待增加', taskname, {
@@ -153,6 +150,9 @@ export default {
 
             return `${y}年${m}月${d}日`
         }
+    },
+    created() {
+        this.fetchData()
     }
 }
 </script>

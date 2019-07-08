@@ -44,11 +44,14 @@ class ToDo(Resource):
                 'code': 20000
                 }
 
-    # 修改任务
+    # 完成任务
     def put(self, todo_id):
-        parser = reqparse.RequestParser()
-        print(parser)
-        return ''
+        result = ifTodoId(todo_id)
+        result.checked = 1
+        db.session.commit()
+        return {
+                'code': 20000
+                }
 
 
 class ToDoList(Resource):
@@ -61,10 +64,8 @@ class ToDoList(Resource):
     # 获取今天的任务
     def get(self):
         result = Tasks.query.filter_by( date = self.today).all()
-        data = [ dict(id=item.id, task=item.task, remark=item.remark,\
-                starttime=item.starttime, endtime=item.endtime, \
-                date=item.date, isshare=item.isshare) \
-                for item in result]
+        data = [ dict(id=item.id, task=item.task, isshare=item.isshare) \
+                for item in result ]
         return {
                 'code': 20000,
                 'data': data
@@ -72,14 +73,13 @@ class ToDoList(Resource):
 
     # 增加任务
     def post(self):
-       # print(parser)
-       # args = parser.parse_args()
-        json_data = request.get_json(force=True)
-        print(json_data)
-       # print(args)
+        data = request.get_json(force=True)
+        insert_task = Tasks( task=data.get('task'), date=self.today, \
+                isshare=data.get('isshare') )
+        db.session.add(insert_task)
+        db.session.commit()
         return {
-                'code': 20000,
-                'data': 'hello'
+                'code': 20000
                 }
 
 
