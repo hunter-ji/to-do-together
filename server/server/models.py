@@ -22,4 +22,4 @@ class Tasks(db.Model):
     endtime = db.Column(db.Time(), nullable=True)
     date = db.Column(db.Date(), nullable=False)
     isshare = db.Column(db.Integer, nullable=False, default=0)
-    checked = db.Column(db.Integer, nullable=False, default=0)
+    checked = db.Column(db.Boolean, nullable=False, default=False)

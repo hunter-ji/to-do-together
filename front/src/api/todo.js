@@ -18,11 +18,10 @@ export function deleteTask(id) {
 }
 
 
-export function changeTask(id, data) {
+export function finishTask(id) {
   return request({
     url: '/todos/' + id,
-    method: 'delete',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    data: data
+    method: 'put',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' }
   })
 }

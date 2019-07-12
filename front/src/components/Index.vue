@@ -5,6 +5,8 @@
                 <myheader></myheader>
             </el-header>
 
+            <p>{{ right_lists }}</p>
+
             <!-- 一个人的卡片 -->
                 <el-card class="box-card right-card list-card">
                     <span style="margin-bottom: 45px;">
@@ -13,25 +15,23 @@
                             今天是{{ today | dateFormat() }}。
                         </h2>
                     </span>
-                    <el-checkbox-group v-model="right_lists">
-                        <div v-for="item in right_lists" class="listitem">
-                            <el-row type="flex">
-                                <el-col :span="23">
-                                    <div class="list">
-                                        <el-checkbox v-model="item.checked" @click="checkedtask(item.id)">
-                                            <span :class="{ delit: item.checked }" @click.prevent="open(item.id, item.task)" >{{ item.task }}</span>
-                                        </el-checkbox>
-                                    </div>
-                                </el-col>
-                                <el-col :span="1">
-                                    <el-link :underline="false" class="toright close" @click="deletetask(item.id)">
-                                        <i class="el-icon-close"></i>
-                                    </el-link>
-                                </el-col>
-                            </el-row>
-                            <el-divider></el-divider>
-                        </div>
-                    </el-checkbox-group>
+                    <div v-for="item in right_lists" class="listitem" :key="item.id">
+                        <el-row type="flex">
+                            <el-col :span="23">
+                                <div class="list">
+                                    <el-checkbox @change="finishtask(item)" v-model="item.checked" checked="item.checked">
+                                        <span :class="{ delit: item.checked }" @click.prevent="open(item.id, item.task)" >{{ item.task }}</span>
+                                    </el-checkbox>
+                                </div>
+                            </el-col>
+                            <el-col :span="1">
+                                <el-link :underline="false" class="toright close" @click="deletetask(item.id)">
+                                    <i class="el-icon-close"></i>
+                                </el-link>
+                            </el-col>
+                        </el-row>
+                        <el-divider></el-divider>
+                    </div>
                     <!-- 用户添加任务 -->
                     <div class="listitem">
                         <el-row type="flex">
@@ -55,7 +55,7 @@
 
 <script>
 // api
-import { getTask, deleteTask, changeTask } from '../api/todo.js'
+import { getTask, deleteTask, finishTask } from '../api/todo.js'
 import { getTaskList, addTask } from '../api/todolist.js'
 
 // components
@@ -80,7 +80,6 @@ export default {
         fetchData() {
             // 初始化数据
             getTaskList().then(response => {
-                console.log(response.data)
                 this.right_lists = response.data
             })
         },
@@ -114,7 +113,8 @@ export default {
                 } )
 
 
-                this.right_lists.push(task)
+                this.fetchData()
+                //this.right_lists.push(task)
                 this.newtask = ''
             }
         },
@@ -130,10 +130,14 @@ export default {
             })
             this.right_lists.splice(index, 1)
         },
-        checkedtask(taskid) {
-            console.log(taskid)
+        finishtask(task) {
+            console.log(task)
+            let this_checked = 0
+            if ( task.checked ) this_checked = 1;
+            finishTask(task.id);
         },
         open(taskid, taskname) {
+            // 额外内容
             this.$confirm('添加额外内容，待增加', taskname, {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -143,6 +147,7 @@ export default {
     },
     filters: {
         dateFormat: function( dateStr, pattern = '' ) {
+            // 时间显示过滤器
             var dt = new Date(dateStr)
             var y = dt.getFullYear()
             var m = (dt.getMonth() + 1).toString().padStart(2, '0')

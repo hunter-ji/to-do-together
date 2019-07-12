@@ -20,8 +20,7 @@ api = Api(app)
 
 def ifTodoId(todo_id):
     result = Tasks.query.filter_by( id = todo_id ).first_or_404()
-    if not result:
-        return { 'code': 400 }
+    if not result: return { 'code': 400 }
     return result
 
 class ToDo(Resource):
@@ -47,7 +46,9 @@ class ToDo(Resource):
     # 完成任务
     def put(self, todo_id):
         result = ifTodoId(todo_id)
+        checked_query = result.checked
         result.checked = 1
+        if checked_query: result.checked = 0
         db.session.commit()
         return {
                 'code': 20000
@@ -60,12 +61,15 @@ class ToDoList(Resource):
 
     def __init__(self):
         self.today = datetime.date.today()
+        self.f = lambda x: True if x == 1 else False
 
     # 获取今天的任务
     def get(self):
         result = Tasks.query.filter_by( date = self.today).all()
-        data = [ dict(id=item.id, task=item.task, isshare=item.isshare) \
+        data = [ dict(id=item.id, task=item.task, isshare=item.isshare, \
+                checked=item.checked) \
                 for item in result ]
+        pprint(data)
         return {
                 'code': 20000,
                 'data': data
