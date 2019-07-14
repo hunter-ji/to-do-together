@@ -5,10 +5,8 @@
                 <myheader></myheader>
             </el-header>
 
-            <p>{{ right_lists }}</p>
-
             <!-- 一个人的卡片 -->
-                <el-card class="box-card right-card list-card">
+                <el-card class="index-card">
                     <span style="margin-bottom: 45px;">
                         <h2>
                             <i class="el-icon-s-flag"></i>
@@ -19,8 +17,8 @@
                         <el-row type="flex">
                             <el-col :span="23">
                                 <div class="list">
-                                    <el-checkbox @change="finishtask(item)" v-model="item.checked" checked="item.checked">
-                                        <span :class="{ delit: item.checked }" @click.prevent="open(item.id, item.task)" >{{ item.task }}</span>
+                                    <el-checkbox @change="finishtask(item)" v-model="item.checked">
+                                        <span :class="{ delit: item.checked }" @click.prevent="remarkPanel(item.id, item.task)" >{{ item.task }}</span>
                                     </el-checkbox>
                                 </div>
                             </el-col>
@@ -131,12 +129,10 @@ export default {
             this.right_lists.splice(index, 1)
         },
         finishtask(task) {
-            console.log(task)
-            let this_checked = 0
-            if ( task.checked ) this_checked = 1;
+            // 完成任务
             finishTask(task.id);
         },
-        open(taskid, taskname) {
+        remarkPanel(taskid, taskname) {
             // 额外内容
             this.$confirm('添加额外内容，待增加', taskname, {
                 confirmButtonText: '确定',
@@ -154,7 +150,7 @@ export default {
             var d = dt.getDate().toString().padStart(2, '0')
 
             return `${y}年${m}月${d}日`
-        }
+        },
     },
     created() {
         this.fetchData()
@@ -163,10 +159,13 @@ export default {
 </script>
 
 <style>
-.list-card {
+.index-card {
     height:auto!important;
     min-height:800px;
     height:auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
 }
 .delit {
     text-decoration: line-through;

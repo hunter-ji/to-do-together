@@ -10,7 +10,7 @@ import VueCookie from 'vue-cookie'
 Vue.config.productionTip = false
 
 import Index from './components/Index.vue'
-import Index2 from './components/Index2.vue'
+import Double from './components/Double.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 
@@ -30,7 +30,7 @@ const router = new VueRouter({
         },{
             name: 'index2',
             path: '/double',
-            component: Index2,
+            component: Double,
             meta: {
                 title: '双人demo'
             }

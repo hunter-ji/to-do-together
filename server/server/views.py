@@ -69,7 +69,6 @@ class ToDoList(Resource):
         data = [ dict(id=item.id, task=item.task, isshare=item.isshare, \
                 checked=item.checked) \
                 for item in result ]
-        pprint(data)
         return {
                 'code': 20000,
                 'data': data
