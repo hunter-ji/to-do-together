@@ -9,9 +9,9 @@ export function getTask(id) {
 }
 
 
-export function deleteTask(id) {
+export function deleteTask(name) {
   return request({
-    url: '/todos/' + id,
+    url: '/todos/' + name,
     method: 'delete',
     headers: { 'content-type': 'application/x-www-form-urlencoded' }
   })

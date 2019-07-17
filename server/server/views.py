@@ -36,7 +36,9 @@ class ToDo(Resource):
 
     # 删除任务
     def delete(self, todo_id):
-        result = ifTodoId(todo_id)
+        task_name = todo_id
+        result = Tasks.query.filter_by( task = task_name,\
+                date = datetime.date.today()  ).first_or_404()
         db.session.delete(result)
         db.session.commit()
         return {

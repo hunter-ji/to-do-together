@@ -23,7 +23,7 @@
                                 </div>
                             </el-col>
                             <el-col :span="1">
-                                <el-link :underline="false" class="toright close" @click="deletetask(item.id)">
+                                <el-link :underline="false" class="toright close" @click="deletetask(item.task)">
                                     <i class="el-icon-close"></i>
                                 </el-link>
                             </el-col>
@@ -81,9 +81,6 @@ export default {
                 this.right_lists = response.data
             })
         },
-        stopclick(value) {
-            console.log(value)
-        },
         check() {
             // 检测输入框为空
             if ( this.newtask == '' ) {
@@ -106,23 +103,19 @@ export default {
                     'share': 0
                 }
                 // 扔后端
-                addTask(task).then( response => {
-                    console.log(response)
-                } )
-
-
-                this.fetchData()
-                //this.right_lists.push(task)
+                addTask(task)
+                // 前端变化
+                this.right_lists.push(task)
                 this.newtask = ''
             }
         },
-        deletetask(taskid) {
+        deletetask(taskname) {
             // 删除任务
             // 后端删除
-            deleteTask(taskid)
+            deleteTask(taskname)
             // 前端删除
             var index = this.right_lists.findIndex(item => {
-                if (item.id == taskid) {
+                if (item.task == taskname) {
                     return true;
                 }
             })
@@ -132,7 +125,7 @@ export default {
             // 完成任务
             finishTask(task.id);
         },
-        remarkPanel(taskid, taskname) {
+        remarkPanel(taskname) {
             // 额外内容
             this.$confirm('添加额外内容，待增加', taskname, {
                 confirmButtonText: '确定',
