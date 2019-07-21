@@ -87,6 +87,21 @@ class ToDoList(Resource):
                 'code': 20000
                 }
 
+class Login(Resource):
+    """用户登陆，登陆成功之后返回其token
+    """
+
+    def post(self):
+        data = request.get_json(force=True)
+
+
+
+class Register(Resource):
+    """用户注册，注册成功则会在kong添加consumer,
+    然后去登陆页面"""
+
+    def post(self):
+        data = request.get_json(force=True)
 
 
 api.add_resource(ToDoList, '/todos')
